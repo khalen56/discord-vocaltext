@@ -1,7 +1,7 @@
 # Discord-vocaltext
 A simple bot that allows you to have teamspeak / mumble like text chats for vocal channels by using permissions.
 
-![Demo](https://github.com/GLedoussal/discord-vocaltext/blob/master/demo.gif?raw=true)
+![Demo](https://raw.githubusercontent.com/GLedoussal/discord-vocaltext/0f40d9f8fda126cfdafb33ff296816cfb89e47bc/demo.gif)
 
 # Requirements
 - Node
