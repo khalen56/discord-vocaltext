@@ -11,6 +11,11 @@ client.on('ready', () => {
 });
 
 client.on('voiceStateUpdate', (oldState, newstate) => {
+
+    if (oldState.voiceChannel && newstate.voiceChannel && oldState.voiceChannel.name === newstate.voiceChannel.name) {
+        return;
+    }
+
     if (oldState.voiceChannel) {
         const textChannel = oldState.guild.channels.reduce((acc, channel) => {
             if (!acc && channel.type === "text" && channel.name === oldState.voiceChannel.name.toLowerCase().replace(' ', '_')) {
