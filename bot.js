@@ -25,7 +25,11 @@ client.on('voiceStateUpdate', (oldState, newstate) => {
         }, null);
 
         if (textChannel) {
-            textChannel.overwritePermissions(oldState, {"READ_MESSAGES": false});
+            textChannel.permissionOverwrites.forEach( permission => {
+                if (permission.id === oldState.id) {
+                    permission.delete();
+                }
+            });
         }
     }
 
