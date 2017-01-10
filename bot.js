@@ -18,7 +18,7 @@ client.on('voiceStateUpdate', (oldState, newstate) => {
 
     if (oldState.voiceChannel) {
         const textChannel = oldState.guild.channels.reduce((acc, channel) => {
-            if (!acc && channel.type === "text" && channel.name === oldState.voiceChannel.name.toLowerCase().replace(' ', '_')) {
+            if (!acc && channel.type === "text" && channel.name === oldState.voiceChannel.name.toLowerCase().replace(/ /g, '_')) {
                 acc = channel;
             }
             return acc;
@@ -35,7 +35,7 @@ client.on('voiceStateUpdate', (oldState, newstate) => {
 
     if (newstate.voiceChannel) {
         const textChannel = newstate.guild.channels.reduce((acc, channel) => {
-            if (!acc && channel.type === "text" && channel.name === newstate.voiceChannel.name.toLowerCase().replace(' ', '_')) {
+            if (!acc && channel.type === "text" && channel.name === newstate.voiceChannel.name.toLowerCase().replace(/ /g, '_')) {
                 acc = channel;
             }
             return acc;
