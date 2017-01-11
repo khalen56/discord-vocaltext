@@ -30,6 +30,10 @@ client.on('voiceStateUpdate', (oldState, newstate) => {
                     permission.delete();
                 }
             });
+            if (process.env.ANNOUNCE && process.env.ANNOUNCE_LEAVE) {
+                console.log(oldState);
+                textChannel.sendMessage(process.env.ANNOUNCE_LEAVE.replace(/\$1/g, oldState.user.username));
+            }
         }
     }
 
@@ -42,6 +46,9 @@ client.on('voiceStateUpdate', (oldState, newstate) => {
         }, null);
         if (textChannel) {
             textChannel.overwritePermissions(oldState, {"READ_MESSAGES": true});
+            if (process.env.ANNOUNCE && process.env.ANNOUNCE_ENTER) {
+                textChannel.sendMessage(process.env.ANNOUNCE_ENTER.replace(/\$1/g, newstate.user.username));
+            }
         }
     }
 });
