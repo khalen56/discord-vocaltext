@@ -31,7 +31,6 @@ client.on('voiceStateUpdate', (oldState, newstate) => {
                 }
             });
             if (process.env.ANNOUNCE && process.env.ANNOUNCE_LEAVE) {
-                console.log(oldState);
                 textChannel.sendMessage(process.env.ANNOUNCE_LEAVE.replace(/\$1/g, oldState.user.username));
             }
         }
