@@ -1,10 +1,12 @@
-'use strict';
+    'use strict';
 
 // Loading env configuration
 require('dotenv').config({path: `${__dirname}/.env`});
 
-const Discord = require("discord.js");
-const client = new Discord.Client();
+const Discord = require("discord.js"),
+client = new Discord.Client(),
+removeDiacritics = require('diacritics').remove,
+moment = require('moment'); 
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.username}!`);
@@ -18,7 +20,8 @@ client.on('voiceStateUpdate', (oldState, newstate) => {
 
     if (oldState.voiceChannel) {
         const textChannel = oldState.guild.channels.reduce((acc, channel) => {
-            if (!acc && channel.type === "text" && channel.name === oldState.voiceChannel.name.toLowerCase().replace(/ /g, '_')) {
+            const unaccendtedName = removeDiacritics(oldState.voiceChannel.name);
+            if (!acc && channel.type === "text" && channel.name === unaccendtedName.toLowerCase().replace(/ /g, '_').replace(/[^a-z0-9]+/g, '')) {
                 acc = channel;
             }
             return acc;
@@ -31,14 +34,16 @@ client.on('voiceStateUpdate', (oldState, newstate) => {
                 }
             });
             if (process.env.ANNOUNCE && process.env.ANNOUNCE_LEAVE) {
-                textChannel.sendMessage(process.env.ANNOUNCE_LEAVE.replace(/\$1/g, oldState.user.username));
+                const date = process.env.DATE_FORMAT ? moment().format(process.env.DATE_FORMAT) + ' ' : '';
+                textChannel.sendMessage(date + process.env.ANNOUNCE_LEAVE.replace(/\$1/g, oldState.user.username));
             }
         }
     }
 
     if (newstate.voiceChannel) {
         const textChannel = newstate.guild.channels.reduce((acc, channel) => {
-            if (!acc && channel.type === "text" && channel.name === newstate.voiceChannel.name.toLowerCase().replace(/ /g, '_')) {
+            const unaccendtedName = removeDiacritics(newstate.voiceChannel.name);
+            if (!acc && channel.type === "text" && channel.name === unaccendtedName.toLowerCase().replace(/ /g, '_').replace(/[^a-z0-9]+/g, '')) {
                 acc = channel;
             }
             return acc;
@@ -46,7 +51,8 @@ client.on('voiceStateUpdate', (oldState, newstate) => {
         if (textChannel) {
             textChannel.overwritePermissions(oldState, {"READ_MESSAGES": true});
             if (process.env.ANNOUNCE && process.env.ANNOUNCE_ENTER) {
-                textChannel.sendMessage(process.env.ANNOUNCE_ENTER.replace(/\$1/g, newstate.user.username));
+                const date = process.env.DATE_FORMAT ? moment().format(process.env.DATE_FORMAT) + ' ' : '';
+                textChannel.sendMessage(date + process.env.ANNOUNCE_ENTER.replace(/\$1/g, newstate.user.username));
             }
         }
     }
