@@ -31,12 +31,16 @@ client.on('voiceStateUpdate', (oldState, newstate) => {
         if (textChannel) {
             textChannel.permissionOverwrites.forEach( permission => {
                 if (permission.id === oldState.id) {
-                    permission.delete();
+                    permission.delete().catch((err)=>{
+                        textChannel.sendMessage("Can't write permissions !").catch((err) => {
+                            console.error("Can't send message");
+                        });
+                    });
                 }
             });
             if (process.env.ANNOUNCE && process.env.ANNOUNCE_LEAVE) {
                 const date = process.env.DATE_FORMAT ? moment().format(process.env.DATE_FORMAT) + ' ' : '';
-                textChannel.sendMessage(date + process.env.ANNOUNCE_LEAVE.replace(/\$1/g, oldState.user.username));
+                textChannel.sendMessage(date + process.env.ANNOUNCE_LEAVE.replace(/\$1/g, oldState.user.username)).catch(()=>{});
             }
         }
     }
@@ -51,10 +55,14 @@ client.on('voiceStateUpdate', (oldState, newstate) => {
             return acc;
         }, null);
         if (textChannel) {
-            textChannel.overwritePermissions(oldState, {"READ_MESSAGES": true});
+            textChannel.overwritePermissions(oldState, {"READ_MESSAGES": true}).catch((err)=>{
+                textChannel.sendMessage("Can't write permissions !").catch((err) => {
+                    console.error("Can't send message");
+                });
+            });;
             if (process.env.ANNOUNCE && process.env.ANNOUNCE_ENTER) {
                 const date = process.env.DATE_FORMAT ? moment().format(process.env.DATE_FORMAT) + ' ' : '';
-                textChannel.sendMessage(date + process.env.ANNOUNCE_ENTER.replace(/\$1/g, newstate.user.username));
+                textChannel.sendMessage(date + process.env.ANNOUNCE_ENTER.replace(/\$1/g, newstate.user.username)).catch(()=>{});
             }
         }
     }
