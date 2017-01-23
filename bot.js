@@ -21,7 +21,6 @@ client.on('voiceStateUpdate', (oldState, newstate) => {
     if (oldState.voiceChannel) {
         const textChannel = oldState.guild.channels.reduce((acc, channel) => {
             const unaccendtedName = removeDiacritics(oldState.voiceChannel.name).replace(/[^a-z0-9_ ]+/gi, '').trim().replace(/ /g, '_').toLowerCase();
-            console.log(unaccendtedName);
             if (!acc && channel.type === "text" && channel.name === unaccendtedName) {
                 acc = channel;
             }
@@ -48,7 +47,6 @@ client.on('voiceStateUpdate', (oldState, newstate) => {
     if (newstate.voiceChannel) {
         const textChannel = newstate.guild.channels.reduce((acc, channel) => {
             const unaccendtedName = removeDiacritics(newstate.voiceChannel.name).replace(/[^a-z0-9_ ]+/gi, '').trim().replace(/ /g, '_').toLowerCase();
-            console.log(unaccendtedName);
             if (!acc && channel.type === "text" && channel.name === unaccendtedName) {
                 acc = channel;
             }
